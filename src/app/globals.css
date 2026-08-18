@@ -1,0 +1,53 @@
+@import "tailwindcss";
+
+:root {
+  --background: #fffcfa;
+  --foreground: #2a2420;
+
+  /* Brand palette — pink & white, warm gray-brown accents (brief section 1) */
+  --color-pink-50: #fdf2f5;
+  --color-pink-100: #fbe4ea;
+  --color-pink-200: #f5c9d6;
+  --color-pink-300: #eda9be;
+  --color-pink-400: #e084a2;
+  --color-pink-500: #cc5f84;
+  --color-pink-600: #b14a6c;
+  --color-pink-700: #8f3a56;
+
+  --color-ink-900: #2a2420;
+  --color-ink-700: #4a413b;
+  --color-ink-500: #7a6f67;
+  --color-line: #e4dad3;
+  --color-cream: #fffcfa;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-body);
+  --font-display: var(--font-display);
+
+  --color-pink-50: var(--color-pink-50);
+  --color-pink-100: var(--color-pink-100);
+  --color-pink-200: var(--color-pink-200);
+  --color-pink-300: var(--color-pink-300);
+  --color-pink-400: var(--color-pink-400);
+  --color-pink-500: var(--color-pink-500);
+  --color-pink-600: var(--color-pink-600);
+  --color-pink-700: var(--color-pink-700);
+
+  --color-ink-900: var(--color-ink-900);
+  --color-ink-700: var(--color-ink-700);
+  --color-ink-500: var(--color-ink-500);
+  --color-line: var(--color-line);
+  --color-cream: var(--color-cream);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+}
+
+.font-display {
+  font-family: var(--font-display);
+}
