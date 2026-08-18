@@ -4,6 +4,7 @@ import { SectionHeading } from "@/components/SectionHeading";
 import { PhotoPlaceholder } from "@/components/PhotoPlaceholder";
 import { WaveDivider, EnsoCircle } from "@/components/decor";
 import { site } from "@/data/site";
+import { stockImages } from "@/lib/stockImages";
 import { BowlIcon, ClockIcon, MapPinIcon, PhoneIcon, SparkleIcon } from "@/components/icons";
 
 export default function Home() {
@@ -48,6 +49,9 @@ export default function Home() {
           <PhotoPlaceholder
             className="aspect-[4/3] w-full rounded-3xl"
             icon={<BowlIcon className="h-20 w-20" />}
+            src={stockImages["hero-home"].url}
+            alt={stockImages["hero-home"].alt}
+            sizes="(max-width: 768px) 100vw, 50vw"
           />
         </div>
         <WaveDivider className="h-8 w-full text-white" />
@@ -63,16 +67,19 @@ export default function Home() {
         <div className="mt-10 grid gap-6 sm:grid-cols-2">
           <Link
             href="/restaurant"
-            className="group relative overflow-hidden rounded-3xl border border-line bg-white p-8 transition-shadow hover:shadow-lg"
+            className="group overflow-hidden rounded-3xl border border-line bg-white transition-shadow hover:shadow-lg"
           >
             <PhotoPlaceholder
-              className="absolute inset-0 opacity-90 transition-opacity group-hover:opacity-100"
+              className="aspect-[16/9] w-full"
               icon={<BowlIcon className="h-24 w-24" />}
+              src={stockImages.ramen.url}
+              alt={stockImages.ramen.alt}
+              sizes="(max-width: 640px) 100vw, 50vw"
             />
-            <div className="relative">
+            <div className="p-8">
               <p className="text-xs font-semibold uppercase tracking-[0.25em] text-pink-600">Ресторант</p>
               <h3 className="mt-2 font-display text-2xl text-ink-900">Разгледай менюто</h3>
-              <p className="mt-3 max-w-sm text-ink-700">
+              <p className="mt-3 text-ink-700">
                 Рамен, поке, корейско барбекю, вина и още — пълното меню на MAKA RAMEN.
               </p>
               <span className="mt-6 inline-flex items-center gap-2 text-sm font-medium text-pink-600 group-hover:text-pink-700">
@@ -83,14 +90,20 @@ export default function Home() {
 
           <Link
             href="/catering"
-            className="group relative overflow-hidden rounded-3xl border border-line bg-ink-900 p-8 text-white transition-shadow hover:shadow-lg"
+            className="group relative overflow-hidden rounded-3xl border border-line bg-ink-900 text-white transition-shadow hover:shadow-lg"
           >
-            <div className="absolute inset-0 bg-gradient-to-br from-pink-600/40 via-ink-900 to-ink-900" />
-            <SparkleIcon className="absolute -right-4 -top-4 h-28 w-28 text-pink-400/30" />
-            <div className="relative">
+            <PhotoPlaceholder
+              className="aspect-[16/9] w-full"
+              icon={<SparkleIcon className="h-24 w-24" />}
+              src={stockImages["hero-catering"].url}
+              alt={stockImages["hero-catering"].alt}
+              sizes="(max-width: 640px) 100vw, 50vw"
+            />
+            <SparkleIcon className="pointer-events-none absolute right-3 top-3 h-10 w-10 text-pink-200/80" />
+            <div className="p-8">
               <p className="text-xs font-semibold uppercase tracking-[0.25em] text-pink-300">Кетъринг</p>
               <h3 className="mt-2 font-display text-2xl">Кетъринг услуги</h3>
-              <p className="mt-3 max-w-sm text-white/80">
+              <p className="mt-3 text-white/80">
                 Japanese-inspired catering for your events — храна, сервиране и обслужване за вашето
                 събитие.
               </p>

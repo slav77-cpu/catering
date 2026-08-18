@@ -123,7 +123,13 @@ export function MenuBrowser({ menu, legend }: { menu: MenuCategory[]; legend: Al
               {cat.items && (
                 <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                   {cat.items.map((item) => (
-                    <MenuItemCard key={item.id} item={item} legend={legend} />
+                    <MenuItemCard
+                      key={item.id}
+                      item={item}
+                      legend={legend}
+                      fallbackImageUrl={cat.imageUrl}
+                      fallbackImageAlt={cat.imageAlt}
+                    />
                   ))}
                 </div>
               )}
@@ -137,7 +143,13 @@ export function MenuBrowser({ menu, legend }: { menu: MenuCategory[]; legend: Al
                       </h3>
                       <div className="mt-3 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                         {sg.items.map((item) => (
-                          <MenuItemCard key={item.id} item={item} legend={legend} />
+                          <MenuItemCard
+                            key={item.id}
+                            item={item}
+                            legend={legend}
+                            fallbackImageUrl={sg.imageUrl ?? cat.imageUrl}
+                            fallbackImageAlt={sg.imageAlt ?? cat.imageAlt}
+                          />
                         ))}
                       </div>
                     </div>

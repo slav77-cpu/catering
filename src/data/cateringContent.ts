@@ -17,6 +17,7 @@
 
 import type { MenuItem } from "./types";
 import { cateringPriceFrom } from "@/lib/cateringPricing";
+import { stockImages } from "@/lib/stockImages";
 
 export const cateringHero = {
   slogans: ["Japanese-inspired catering for your events", "Your event. Our passion."],
@@ -87,10 +88,19 @@ export const packageTiers: PackageTier[] = [
 // "Десерти" stays empty rather than inventing dishes; "Пакети за фирмени
 // партита" points back at the package tiers above instead of duplicating
 // items, since it's a bundling concept, not a dish list.
-export const cateringMenuCategories: { id: string; name: string; note?: string; items: MenuItem[] }[] = [
+export const cateringMenuCategories: {
+  id: string;
+  name: string;
+  note?: string;
+  imageUrl?: string;
+  imageAlt?: string;
+  items: MenuItem[];
+}[] = [
   {
     id: "topli-predyastiya",
     name: "Топли предястия",
+    imageUrl: stockImages["catering-topli-predyastiya"].url,
+    imageAlt: stockImages["catering-topli-predyastiya"].alt,
     items: [
       {
         id: "cat-edamame",
@@ -128,6 +138,8 @@ export const cateringMenuCategories: { id: string; name: string; note?: string; 
   {
     id: "studeni-predyastiya",
     name: "Студени предястия",
+    imageUrl: stockImages["catering-studeni-predyastiya"].url,
+    imageAlt: stockImages["catering-studeni-predyastiya"].alt,
     items: [
       {
         id: "cat-tsukimono",
@@ -143,6 +155,8 @@ export const cateringMenuCategories: { id: string; name: string; note?: string; 
     id: "tabli-bufeti",
     name: "Кетъринг табли и бюфети",
     note: "Поке купите се предлагат и като общи табли за самообслужване.",
+    imageUrl: stockImages["catering-tabli-bufeti"].url,
+    imageAlt: stockImages["catering-tabli-bufeti"].alt,
     items: [
       {
         id: "cat-glazirano-svinsko",
@@ -196,6 +210,8 @@ export const cateringMenuCategories: { id: string; name: string; note?: string; 
   {
     id: "napitki",
     name: "Напитки",
+    imageUrl: stockImages["catering-napitki"].url,
+    imageAlt: stockImages["catering-napitki"].alt,
     items: [
       {
         id: "cat-mineralna-voda",

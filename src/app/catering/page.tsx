@@ -8,6 +8,7 @@ import { InquiryForm } from "@/components/catering/InquiryForm";
 import { MenuItemCard } from "@/components/menu/MenuItemCard";
 import { site } from "@/data/site";
 import { allergenLegend } from "@/data/restaurantMenu";
+import { stockImages } from "@/lib/stockImages";
 import {
   cateringHero,
   cateringHighlights,
@@ -101,6 +102,9 @@ export default function CateringPage() {
           <PhotoPlaceholder
             className="aspect-[4/3] w-full rounded-3xl"
             icon={<SparkleIcon className="h-20 w-20" />}
+            src={stockImages["hero-catering"].url}
+            alt={stockImages["hero-catering"].alt}
+            sizes="(max-width: 768px) 100vw, 50vw"
           />
         </div>
         <WaveDivider className="h-8 w-full text-pink-50/60" />
@@ -222,7 +226,13 @@ export default function CateringPage() {
                 {cat.items.length > 0 ? (
                   <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                     {cat.items.map((item) => (
-                      <MenuItemCard key={item.id} item={item} legend={allergenLegend} />
+                      <MenuItemCard
+                        key={item.id}
+                        item={item}
+                        legend={allergenLegend}
+                        fallbackImageUrl={cat.imageUrl}
+                        fallbackImageAlt={cat.imageAlt}
+                      />
                     ))}
                   </div>
                 ) : (

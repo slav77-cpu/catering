@@ -15,12 +15,18 @@ export type MenuItem = {
   priceBgn: number;
   /** short note shown under the item, e.g. reservation requirements */
   note?: string;
+  /** per-item photo override — falls back to the category/subgroup photo when unset */
+  imageUrl?: string;
+  imageAlt?: string;
 };
 
 export type MenuSubgroup = {
   id: string;
   name: string;
   items: MenuItem[];
+  /** representative photo for every item in this subgroup, unless the item overrides it */
+  imageUrl?: string;
+  imageAlt?: string;
 };
 
 export type MenuCategory = {
@@ -32,4 +38,7 @@ export type MenuCategory = {
   subgroups?: MenuSubgroup[];
   /** category-level note, e.g. "glass wine" pricing or reservation policy */
   note?: string;
+  /** representative photo for every item in this category, unless overridden at the subgroup/item level */
+  imageUrl?: string;
+  imageAlt?: string;
 };

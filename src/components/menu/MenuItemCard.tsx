@@ -6,16 +6,30 @@ import { allergenNames, formatPrice } from "@/lib/format";
 import { PhotoPlaceholder } from "@/components/PhotoPlaceholder";
 import { BowlIcon, InfoIcon, LeafIcon } from "@/components/icons";
 
-export function MenuItemCard({ item, legend }: { item: MenuItem; legend: Allergen[] }) {
+export function MenuItemCard({
+  item,
+  legend,
+  fallbackImageUrl,
+  fallbackImageAlt,
+}: {
+  item: MenuItem;
+  legend: Allergen[];
+  fallbackImageUrl?: string;
+  fallbackImageAlt?: string;
+}) {
   const [expanded, setExpanded] = useState(false);
   const hasDetails = Boolean(item.description || (item.allergens && item.allergens.length > 0));
   const names = allergenNames(item.allergens, legend);
+  const imageUrl = item.imageUrl ?? fallbackImageUrl;
+  const imageAlt = item.imageAlt ?? fallbackImageAlt ?? item.name;
 
   return (
     <article className="flex gap-4 rounded-2xl border border-line bg-white p-4">
       <PhotoPlaceholder
         className="h-20 w-20 shrink-0 rounded-xl"
         icon={<BowlIcon className="h-8 w-8" />}
+        src={imageUrl}
+        alt={imageAlt}
       />
       <div className="min-w-0 flex-1">
         <div className="flex items-start gap-1.5">
