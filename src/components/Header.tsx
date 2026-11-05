@@ -15,7 +15,7 @@ export function Header() {
           <span className="font-display text-lg tracking-wide text-ink-900 sm:text-xl">
             {site.restaurantName}
           </span>
-          <span className="text-[10px] uppercase tracking-[0.25em] text-pink-500">
+          <span className="text-[10px] uppercase tracking-[0.25em] text-pink-600">
             Ramen · Poke · Sushi
           </span>
         </Link>
@@ -35,7 +35,7 @@ export function Header() {
         <div className="hidden md:block">
           <a
             href={`tel:${site.phoneRestaurant.replace(/\s+/g, "")}`}
-            className="inline-flex items-center gap-2 rounded-full bg-pink-500 px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-pink-600"
+            className="inline-flex items-center gap-2 rounded-full bg-pink-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-pink-700"
           >
             <PhoneIcon className="h-4 w-4" />
             {site.phoneRestaurant}
@@ -68,7 +68,7 @@ export function Header() {
             ))}
             <a
               href={`tel:${site.phoneRestaurant.replace(/\s+/g, "")}`}
-              className="my-3 inline-flex items-center justify-center gap-2 rounded-full bg-pink-500 px-4 py-3 text-sm font-medium text-white"
+              className="my-3 inline-flex items-center justify-center gap-2 rounded-full bg-pink-600 px-4 py-3 text-sm font-medium text-white"
             >
               <PhoneIcon className="h-4 w-4" />
               Обади се: {site.phoneRestaurant}

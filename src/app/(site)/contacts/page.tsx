@@ -2,12 +2,14 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ContactForm } from "@/components/contacts/ContactForm";
 import { site } from "@/data/site";
+import { pageMetadata } from "@/lib/seo";
 import { ClockIcon, FacebookIcon, InstagramIcon, MapPinIcon, PhoneIcon } from "@/components/icons";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Контакти",
   description: `Свържете се с ${site.restaurantName} — адрес, телефон, работно време и карта на локацията в ${site.city}.`,
-};
+  path: "/contacts",
+});
 
 export default function ContactsPage() {
   const phones =
@@ -26,7 +28,7 @@ export default function ContactsPage() {
         </Link>
 
         <div className="mt-4">
-          <p className="text-xs font-semibold uppercase tracking-[0.25em] text-pink-500">Контакти</p>
+          <p className="text-xs font-semibold uppercase tracking-[0.25em] text-pink-600">Контакти</p>
           <h1 className="mt-1 font-display text-3xl text-ink-900 sm:text-4xl">Контакти</h1>
           <p className="mt-2 max-w-xl text-sm text-ink-700">
             Ще се радваме да чуем от вас — по телефон, имейл или с кратко съобщение по-долу.
@@ -64,7 +66,7 @@ export default function ContactsPage() {
                   href={site.mapsDirectionsUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="mt-2 inline-flex items-center gap-2 rounded-full bg-pink-500 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-pink-600"
+                  className="mt-2 inline-flex items-center gap-2 rounded-full bg-pink-600 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-pink-700"
                 >
                   Навигирай
                 </a>

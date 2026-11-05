@@ -1,10 +1,7 @@
 import type { MetadataRoute } from "next";
+import { siteUrl } from "@/lib/siteUrl";
 
-// TODO: swap for the real production domain once the client confirms it
-// (see site.ts / README for other pending TODOs). Using a placeholder
-// so the site still builds and produces a well-formed sitemap in the
-// meantime.
-const baseUrl = "https://makaramen.bg";
+const baseUrl = siteUrl;
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const lastModified = new Date();

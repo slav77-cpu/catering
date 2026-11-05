@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import { Inter, Playfair_Display } from "next/font/google";
+import type { ReactNode } from "react";
 import "./globals.css";
-import { Header } from "@/components/Header";
-import { Footer } from "@/components/Footer";
 import { site } from "@/data/site";
+import { pageMetadata } from "@/lib/seo";
+import { siteUrl } from "@/lib/siteUrl";
 
 const bodyFont = Inter({
   variable: "--font-body",
@@ -16,25 +17,22 @@ const displayFont = Playfair_Display({
 });
 
 export const metadata: Metadata = {
+  ...pageMetadata({
+    description:
+      "MAKA RAMEN — японска кухня в Пловдив: рамен, поке и суши ястия. MAKA CATERING — кетъринг за частни и фирмени събития.",
+    path: "/",
+  }),
+  metadataBase: new URL(siteUrl),
   title: {
     default: `${site.restaurantName} — Японски ресторант и кетъринг в ${site.city}`,
     template: `%s | ${site.restaurantName}`,
   },
-  description:
-    "MAKA RAMEN — японска кухня в Пловдив: рамен, поке и суши ястия. MAKA CATERING — кетъринг за частни и фирмени събития.",
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html
-      lang="bg"
-      className={`${bodyFont.variable} ${displayFont.variable} h-full antialiased`}
-    >
-      <body className="flex min-h-full flex-col bg-cream text-ink-900">
-        <Header />
-        <main className="flex-1">{children}</main>
-        <Footer />
-      </body>
+    <html lang="bg" className={`${bodyFont.variable} ${displayFont.variable} h-full antialiased`}>
+      <body className="flex min-h-full flex-col bg-cream text-ink-900">{children}</body>
     </html>
   );
 }

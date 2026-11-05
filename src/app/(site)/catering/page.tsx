@@ -2,21 +2,15 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Button } from "@/components/Button";
 import { SectionHeading } from "@/components/SectionHeading";
-import { PhotoPlaceholder } from "@/components/PhotoPlaceholder";
-import { WaveDivider, EnsoCircle } from "@/components/decor";
+import { SiteImage } from "@/components/SiteImage";
+import { CateringMenu } from "@/components/catering/CateringMenu";
+import { EventGallery } from "@/components/catering/EventGallery";
 import { InquiryForm } from "@/components/catering/InquiryForm";
-import { MenuItemCard } from "@/components/menu/MenuItemCard";
 import { site } from "@/data/site";
-import { allergenLegend } from "@/data/restaurantMenu";
+import { getPublicGallery, getPublicMenu } from "@/lib/menu";
+import { pageMetadata } from "@/lib/seo";
 import { stockImages } from "@/lib/stockImages";
-import {
-  cateringHero,
-  cateringHighlights,
-  eventTypes,
-  packageTiers,
-  cateringMenuCategories,
-  cateringFaq,
-} from "@/data/cateringContent";
+import { cateringHero, cateringHighlights, eventTypes, packageTiers, cateringFaq } from "@/data/cateringPage";
 import {
   BowlIcon,
   UsersIcon,
@@ -27,10 +21,14 @@ import {
   ClockIcon,
 } from "@/components/icons";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Кетъринг",
   description: `${site.cateringName} — японски вдъхновен кетъринг за частни и фирмени събития в ${site.city}. Изпратете запитване за оферта, съобразена с вашето събитие.`,
-};
+  path: "/catering",
+});
+
+// Rendered per request so uploaded photos and changed prices show up immediately.
+export const dynamic = "force-dynamic";
 
 const highlightIcons: Record<string, React.ComponentType<{ className?: string }>> = {
   "japanese-cuisine": BowlIcon,
@@ -46,68 +44,53 @@ const eventTypeIcons: Record<string, React.ComponentType<{ className?: string }>
   openings: ClockIcon,
 };
 
-const menuCategoryIcons: Record<string, React.ComponentType<{ className?: string }>> = {
-  "topli-predyastiya": BowlIcon,
-  "studeni-predyastiya": LeafIcon,
-  "tabli-bufeti": UsersIcon,
-  deserti: SparkleIcon,
-  napitki: BowlIcon,
-  "firmeni-partita": UsersIcon,
-};
-
 const telHref = `tel:${site.phoneCatering.replace(/\s+/g, "")}`;
 
-export default function CateringPage() {
+export default async function CateringPage() {
+  const [menu, gallery] = await Promise.all([getPublicMenu("CATERING"), getPublicGallery()]);
+
   return (
     <div className="pb-16">
-      <div className="mx-auto max-w-6xl px-4 pt-8 sm:px-6 lg:px-8">
-        <Link href="/" className="text-sm text-ink-500 hover:text-pink-600">
-          ← Начало
-        </Link>
-      </div>
-
       {/* 1. Представяне на услугата */}
-      <section className="relative overflow-hidden">
-        <EnsoCircle className="pointer-events-none absolute -right-20 -top-20 h-80 w-80 text-pink-200/50" />
-        <div className="relative mx-auto grid max-w-6xl gap-10 px-4 py-10 sm:px-6 md:grid-cols-2 md:items-center md:py-16 lg:px-8">
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.25em] text-pink-500">
-              {site.cateringName}
-            </p>
-            <h1 className="mt-3 font-display text-4xl leading-tight text-ink-900 sm:text-5xl">
-              {cateringHero.slogans[0]}
-            </h1>
-            <p className="mt-3 font-display text-xl text-pink-500">{cateringHero.slogans[1]}</p>
-            <p className="mt-5 max-w-md text-ink-700">{cateringHero.description}</p>
+      <section className="relative isolate overflow-hidden bg-ink-900 text-white">
+        <SiteImage
+          src={stockImages["hero-catering"].url}
+          alt={stockImages["hero-catering"].alt}
+          fill
+          loading="eager"
+          fetchPriority="high"
+          sizes="100vw"
+          className="-z-20 object-cover"
+        />
+        <div className="absolute inset-0 -z-10 bg-gradient-to-r from-ink-900/90 via-ink-900/70 to-ink-900/30" />
+        <div className="mx-auto max-w-6xl px-4 py-20 sm:px-6 md:py-32 lg:px-8">
+          <Link href="/" className="text-sm text-white/85 hover:text-white">
+            ← Начало
+          </Link>
+          <p className="mt-8 text-xs font-semibold uppercase tracking-[0.25em] text-pink-200">{site.cateringName}</p>
+          <h1 className="mt-3 max-w-2xl font-display text-4xl leading-tight sm:text-5xl">{cateringHero.slogans[0]}</h1>
+          <p className="mt-3 font-display text-xl text-pink-200">{cateringHero.slogans[1]}</p>
+          <p className="mt-5 max-w-md text-white/90">{cateringHero.description}</p>
 
-            <div className="mt-8 flex flex-wrap items-center gap-4">
-              <a
-                href={telHref}
-                className="inline-flex items-center gap-2 rounded-full bg-pink-500 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-pink-600"
-              >
-                <PhoneIcon className="h-4 w-4" />
-                {site.phoneCatering}
-              </a>
-              <a
-                href={site.instagramUrl}
-                target="_blank"
-                rel="noreferrer"
-                className="inline-flex items-center gap-2 text-sm font-medium text-pink-600 hover:text-pink-700"
-              >
-                <InstagramIcon className="h-4 w-4" />
-                {site.instagramHandle}
-              </a>
-            </div>
+          <div className="mt-8 flex flex-wrap items-center gap-4">
+            <a
+              href={telHref}
+              className="inline-flex items-center gap-2 rounded-full bg-pink-600 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-pink-700"
+            >
+              <PhoneIcon className="h-4 w-4" />
+              {site.phoneCatering}
+            </a>
+            <a
+              href={site.instagramUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-2 text-sm font-medium text-white hover:text-pink-200"
+            >
+              <InstagramIcon className="h-4 w-4" />
+              {site.instagramHandle}
+            </a>
           </div>
-          <PhotoPlaceholder
-            className="aspect-[4/3] w-full rounded-3xl"
-            icon={<SparkleIcon className="h-20 w-20" />}
-            src={stockImages["hero-catering"].url}
-            alt={stockImages["hero-catering"].alt}
-            sizes="(max-width: 768px) 100vw, 50vw"
-          />
         </div>
-        <WaveDivider className="h-8 w-full text-pink-50/60" />
       </section>
 
       {/* Highlights */}
@@ -158,6 +141,7 @@ export default function CateringPage() {
       <section className="bg-ink-900 text-white">
         <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8">
           <SectionHeading
+            onDark
             kicker="Пакети"
             title="Изберете база за вашата оферта"
             subtitle="Всяка оферта се изготвя индивидуално според броя гости, мястото и повода — пакетите по-долу са отправна точка за разговор, не фиксирани цени."
@@ -210,40 +194,7 @@ export default function CateringPage() {
           потвърждава по телефона.
         </p>
 
-        <div className="mt-8 space-y-10">
-          {cateringMenuCategories.map((cat) => {
-            const Icon = menuCategoryIcons[cat.id] ?? BowlIcon;
-            return (
-              <div key={cat.id}>
-                <div className="flex items-center gap-3">
-                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-pink-50">
-                    <Icon className="h-5 w-5 text-pink-500" />
-                  </div>
-                  <h3 className="font-display text-xl text-ink-900">{cat.name}</h3>
-                </div>
-                {cat.note && <p className="mt-2 text-sm text-ink-500">{cat.note}</p>}
-
-                {cat.items.length > 0 ? (
-                  <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                    {cat.items.map((item) => (
-                      <MenuItemCard
-                        key={item.id}
-                        item={item}
-                        legend={allergenLegend}
-                        fallbackImageUrl={cat.imageUrl}
-                        fallbackImageAlt={cat.imageAlt}
-                      />
-                    ))}
-                  </div>
-                ) : (
-                  !cat.note && (
-                    <p className="mt-3 text-sm text-ink-500">Предстои — очаквайте скоро.</p>
-                  )
-                )}
-              </div>
-            );
-          })}
-        </div>
+        <CateringMenu menu={menu} />
 
         <div className="mt-10 flex flex-col items-start gap-4 rounded-2xl border border-line bg-pink-50/60 p-6 sm:flex-row sm:items-center sm:justify-between">
           <p className="text-sm text-ink-700">
@@ -260,6 +211,8 @@ export default function CateringPage() {
           </div>
         </div>
       </section>
+
+      <EventGallery photos={gallery} />
 
       {/* 4. FAQ */}
       <section className="bg-pink-50/60">
@@ -299,7 +252,7 @@ export default function CateringPage() {
             </div>
             <a
               href={telHref}
-              className="inline-flex items-center justify-center gap-2 rounded-full bg-pink-500 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-pink-600"
+              className="inline-flex items-center justify-center gap-2 rounded-full bg-pink-600 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-pink-700"
             >
               <PhoneIcon className="h-4 w-4" />
               {site.phoneCatering}

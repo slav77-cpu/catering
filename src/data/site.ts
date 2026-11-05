@@ -24,8 +24,20 @@ export const site = {
 
   // TODO: confirm working hours per day.
   hours: [
-    { day: "Понеделник – Петък", time: "11:00 – 22:00" },
-    { day: "Събота – Неделя", time: "12:00 – 23:00" },
+    {
+      day: "Понеделник – Петък",
+      time: "11:00 – 22:00",
+      schemaDays: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+      opens: "11:00",
+      closes: "22:00",
+    },
+    {
+      day: "Събота – Неделя",
+      time: "12:00 – 23:00",
+      schemaDays: ["Saturday", "Sunday"],
+      opens: "12:00",
+      closes: "23:00",
+    },
   ],
 
   // TODO: confirm — no restaurant/catering email given in the brief yet.

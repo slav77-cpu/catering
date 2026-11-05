@@ -1,15 +1,13 @@
 import type { MetadataRoute } from "next";
-
-// TODO: swap for the real production domain once the client confirms it
-// (kept in sync with the same placeholder in sitemap.ts).
-const baseUrl = "https://makaramen.bg";
+import { siteUrl } from "@/lib/siteUrl";
 
 export default function robots(): MetadataRoute.Robots {
   return {
     rules: {
       userAgent: "*",
       allow: "/",
+      disallow: ["/admin", "/login", "/api/"],
     },
-    sitemap: `${baseUrl}/sitemap.xml`,
+    sitemap: `${siteUrl}/sitemap.xml`,
   };
 }

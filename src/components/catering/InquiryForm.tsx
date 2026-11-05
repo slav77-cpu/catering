@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, type FormEvent, type ReactNode } from "react";
-import { packageTiers } from "@/data/cateringContent";
+import { packageTiers } from "@/data/cateringPage";
 
 const eventTypeOptions = [
   { value: "firmeno", label: "Фирмено" },
@@ -97,7 +97,7 @@ export function InquiryForm() {
         <button
           type="submit"
           disabled={status === "submitting"}
-          className="inline-flex w-full items-center justify-center rounded-full bg-pink-500 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-pink-600 disabled:opacity-60 sm:w-auto"
+          className="inline-flex w-full items-center justify-center rounded-full bg-pink-600 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-pink-700 disabled:opacity-60 sm:w-auto"
         >
           {status === "submitting" ? "Изпращане…" : "Изпрати запитване"}
         </button>

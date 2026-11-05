@@ -1,0 +1,96 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+/// Which public menu a category belongs to: /restaurant or /catering.
+enum MenuType {
+  RESTAURANT
+  CATERING
+}
+
+model MenuCategory {
+  id        String   @id @default(cuid())
+  type      MenuType @default(RESTAURANT)
+  name      String
+  /// Shown under the category heading, e.g. "Вино на чаша — 5€ / 9.78лв".
+  note      String?
+  /// Set on a subcategory, e.g. "Бяло вино" under "Вина". One level deep.
+  parentId  String?
+  sortOrder Int      @default(0)
+  isVisible Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  parent   MenuCategory?  @relation("Subcategories", fields: [parentId], references: [id], onDelete: Restrict)
+  children MenuCategory[] @relation("Subcategories")
+  items    MenuItem[]
+
+  @@index([type, parentId, sortOrder])
+}
+
+model MenuItem {
+  id           String  @id @default(cuid())
+  categoryId   String
+  name         String
+  description  String?
+  /// e.g. "600г" or "330мл"
+  portion      String?
+  note         String?
+  isVegetarian Boolean @default(false)
+  priceEur     Decimal @db.Decimal(10, 2)
+  priceBgn     Decimal @db.Decimal(10, 2)
+  /// Codes from src/data/allergens.ts
+  allergens    Int[]
+
+  /// Cloudinary asset. All four are set together; null means "use the category photo".
+  imagePublicId String?
+  imageAlt      String?
+  imageWidth    Int?
+  imageHeight   Int?
+
+  isVisible Boolean  @default(true)
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  category MenuCategory @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+
+  @@index([categoryId, sortOrder])
+}
+
+model GalleryPhoto {
+  id        String    @id @default(cuid())
+  publicId  String    @unique
+  width     Int
+  height    Int
+  /// Empty until the client describes the photo; a photo cannot be shown without it.
+  alt       String    @default("")
+  caption   String?
+  eventDate DateTime? @db.Date
+  sortOrder Int       @default(0)
+  /// New uploads stay hidden until they have alt text and the client publishes them.
+  isVisible Boolean   @default(false)
+  createdAt DateTime  @default(now())
+
+  @@index([isVisible, sortOrder])
+}
+
+model AdminUser {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  createdAt    DateTime @default(now())
+}
+
+/// Fixed-window counter behind the login rate limit. Kept in the database so a
+/// redeploy or restart does not hand an attacker a fresh set of attempts.
+model LoginAttempt {
+  key         String   @id
+  count       Int
+  windowStart DateTime
+}

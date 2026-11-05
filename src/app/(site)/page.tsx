@@ -1,60 +1,70 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { Button } from "@/components/Button";
 import { SectionHeading } from "@/components/SectionHeading";
+import { JsonLd } from "@/components/JsonLd";
 import { PhotoPlaceholder } from "@/components/PhotoPlaceholder";
-import { WaveDivider, EnsoCircle } from "@/components/decor";
+import { SiteImage } from "@/components/SiteImage";
 import { site } from "@/data/site";
+import { pageMetadata, restaurantJsonLd } from "@/lib/seo";
 import { stockImages } from "@/lib/stockImages";
 import { BowlIcon, ClockIcon, MapPinIcon, PhoneIcon, SparkleIcon } from "@/components/icons";
+
+export const metadata: Metadata = pageMetadata({
+  description:
+    "MAKA RAMEN — японска кухня в Пловдив: рамен, поке и суши ястия. MAKA CATERING — кетъринг за частни и фирмени събития.",
+  path: "/",
+});
 
 export default function Home() {
   return (
     <>
+      <JsonLd data={restaurantJsonLd()} />
+
       {/* Hero */}
-      <section className="relative overflow-hidden bg-pink-50/50">
-        <EnsoCircle className="pointer-events-none absolute -right-24 -top-24 h-96 w-96 text-pink-200/60" />
-        <div className="relative mx-auto grid max-w-6xl gap-10 px-4 py-16 sm:px-6 md:grid-cols-2 md:items-center md:py-24 lg:px-8">
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.25em] text-pink-500">
-              {site.city} · Японска кухня
-            </p>
-            <h1 className="mt-3 font-display text-4xl leading-tight text-ink-900 sm:text-5xl">
-              {site.restaurantName}
-              <span className="block text-pink-500">&amp; {site.cateringName}</span>
-            </h1>
-            <p className="mt-5 max-w-md text-ink-700">
-              Рамен, поке и суши ястия на място в {site.city} — и японски вдъхновен кетъринг за вашето
-              следващо събитие.
-            </p>
-            <div className="mt-8 flex flex-wrap gap-3 text-sm text-ink-700">
-              <span className="inline-flex items-center gap-2">
-                <ClockIcon className="h-4 w-4 text-pink-500" />
-                {site.hours[0].time}
-              </span>
-              <span className="inline-flex items-center gap-2">
-                <MapPinIcon className="h-4 w-4 text-pink-500" />
-                {site.addressText}
-              </span>
-            </div>
-            <div className="mt-6">
-              <a
-                href={`tel:${site.phoneRestaurant.replace(/\s+/g, "")}`}
-                className="inline-flex items-center gap-2 text-sm font-medium text-pink-600 hover:text-pink-700"
-              >
-                <PhoneIcon className="h-4 w-4" />
-                Обади се: {site.phoneRestaurant}
-              </a>
-            </div>
+      <section className="relative isolate overflow-hidden bg-ink-900 text-white" data-testid="hero">
+        <SiteImage
+          src={stockImages["hero-home"].url}
+          alt={stockImages["hero-home"].alt}
+          fill
+          loading="eager"
+          fetchPriority="high"
+          sizes="100vw"
+          className="-z-20 object-cover"
+        />
+        <div className="absolute inset-0 -z-10 bg-gradient-to-r from-ink-900/90 via-ink-900/65 to-ink-900/20" />
+        <div className="mx-auto max-w-6xl px-4 py-24 sm:px-6 md:py-36 lg:px-8">
+          <p className="text-xs font-semibold uppercase tracking-[0.25em] text-pink-200">
+            {site.city} · Японска кухня
+          </p>
+          <h1 className="mt-3 font-display text-4xl leading-tight sm:text-5xl">
+            {site.restaurantName}
+            <span className="block text-pink-200">&amp; {site.cateringName}</span>
+          </h1>
+          <p className="mt-5 max-w-md text-white/90">
+            Рамен, поке и суши ястия на място в {site.city} — и японски вдъхновен кетъринг за вашето следващо
+            събитие.
+          </p>
+          <div className="mt-8 flex flex-wrap gap-x-5 gap-y-2 text-sm text-white/90">
+            <span className="inline-flex items-center gap-2">
+              <ClockIcon className="h-4 w-4 text-pink-200" />
+              {site.hours[0].time}
+            </span>
+            <span className="inline-flex items-center gap-2">
+              <MapPinIcon className="h-4 w-4 text-pink-200" />
+              {site.addressText}
+            </span>
           </div>
-          <PhotoPlaceholder
-            className="aspect-[4/3] w-full rounded-3xl"
-            icon={<BowlIcon className="h-20 w-20" />}
-            src={stockImages["hero-home"].url}
-            alt={stockImages["hero-home"].alt}
-            sizes="(max-width: 768px) 100vw, 50vw"
-          />
+          <div className="mt-6">
+            <a
+              href={`tel:${site.phoneRestaurant.replace(/\s+/g, "")}`}
+              className="inline-flex items-center gap-2 rounded-full bg-pink-600 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-pink-700"
+            >
+              <PhoneIcon className="h-4 w-4" />
+              Обади се: {site.phoneRestaurant}
+            </a>
+          </div>
         </div>
-        <WaveDivider className="h-8 w-full text-white" />
       </section>
 
       {/* Two equal CTAs */}

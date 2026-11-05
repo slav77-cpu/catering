@@ -1,28 +1,24 @@
 /**
- * Stand-in stock photography, sourced from Unsplash (free for commercial
- * use, no attribution required: https://unsplash.com/license) purely so
- * the site has full visual coverage before the client supplies real
- * photos of their own food, interior and events (brief §9). Every URL
- * below was verified to resolve with a 200 + image content-type at the
- * time it was added.
+ * Stand-in stock photography, sourced from Unsplash (free for commercial use,
+ * no attribution required: https://unsplash.com/license) until real photos
+ * replace it.
  *
- * To swap in a real photo: replace the `url` (and update `alt` if the
- * subject changes) for the relevant key below — restaurantMenu.ts,
- * cateringContent.ts, and the home/catering hero sections all read from
- * this single file, so nothing else needs to change.
+ * Page heroes read this directly. Menu items without their own uploaded photo
+ * fall back to their category's picture through categoryStockPhoto() below, so
+ * a photo the client uploads in the admin panel always takes precedence.
  */
 export const stockImages = {
   "hero-home": {
     url: "https://images.unsplash.com/photo-1653697469196-89c44bb81a98?auto=format&fit=crop&w=1600&q=80",
-    alt: "Close-up top-down shot of a steaming bowl of ramen noodle soup",
+    alt: "Купа с рамен, снимана отгоре",
   },
   "hero-catering": {
     url: "https://images.unsplash.com/photo-1547559101-69ffc8762cb2?auto=format&fit=crop&w=1600&q=80",
-    alt: "Elegant Japanese-style meal with three dishes served in bowls on a wooden tray",
+    alt: "Японски ястия в купички, поднесени на дървен поднос",
   },
   ramen: {
     url: "https://images.unsplash.com/photo-1637056930239-3b56a2034cb8?auto=format&fit=crop&w=1600&q=80",
-    alt: "Bowl of ramen noodles on a table",
+    alt: "Купа с рамен на маса",
   },
   predyastiya: {
     url: "https://images.unsplash.com/photo-1738681336104-608b4e7dc3b0?auto=format&fit=crop&w=1600&q=80",
@@ -91,3 +87,29 @@ export const stockImages = {
 } as const;
 
 export type StockImageKey = keyof typeof stockImages;
+
+const categoryStockKeys: Record<string, StockImageKey> = {
+  ramen: "ramen",
+  predyastiya: "predyastiya",
+  dobavki: "dobavki",
+  poke: "poke",
+  "koreysko-barbekyu": "koreysko-barbekyu",
+  byalo: "vina-byalo",
+  roze: "vina-roze",
+  cherveno: "vina-cherveno",
+  bezalkoholni: "bezalkoholni",
+  "organichni-chaiove": "organichni-chaiove",
+  "topli-napitki": "topli-napitki",
+  bira: "bira",
+  sake: "sake",
+  "topli-predyastiya": "catering-topli-predyastiya",
+  "studeni-predyastiya": "catering-studeni-predyastiya",
+  "tabli-bufeti": "catering-tabli-bufeti",
+  napitki: "catering-napitki",
+};
+
+/** Keyed by the seeded category id. Categories the client adds later have no stock photo. */
+export function categoryStockPhoto(categoryId: string): string | undefined {
+  const key = categoryStockKeys[categoryId];
+  return key ? stockImages[key].url : undefined;
+}

@@ -1,30 +1,16 @@
-import type { Allergen, MenuCategory } from "./types";
-import { stockImages } from "@/lib/stockImages";
+import type { MenuCategory } from "./types";
 
+// SEED SOURCE ONLY (prisma/seed.ts) — the site reads the menu from the database,
+// so editing this file changes nothing on a seeded site.
+//
 // Transcribed verbatim from "Приложение А: Реално меню на ресторанта
 // (MAKA RAMEN)" in the client brief. Prices are given in EUR / BGN in the
 // source (Bulgaria is transitioning to the euro) — both are shown on site.
-
-export const allergenLegend: Allergen[] = [
-  { code: 1, name: "Глутен" },
-  { code: 2, name: "Яйчни продукти" },
-  { code: 3, name: "Рибни продукти" },
-  { code: 4, name: "Соя" },
-  { code: 5, name: "Лактоза" },
-  { code: 6, name: "Дървесни ядки" },
-  { code: 7, name: "Целина" },
-  { code: 8, name: "Синап и горчица" },
-  { code: 9, name: "Сусам" },
-  { code: 10, name: "Ракообразни" },
-  { code: 11, name: "Мекотели" },
-];
 
 export const restaurantMenu: MenuCategory[] = [
   {
     id: "ramen",
     name: "Рамен",
-    imageUrl: stockImages.ramen.url,
-    imageAlt: stockImages.ramen.alt,
     items: [
       {
         id: "tonkotsu-shoyu",
@@ -72,8 +58,6 @@ export const restaurantMenu: MenuCategory[] = [
   {
     id: "predyastiya",
     name: "Предястия",
-    imageUrl: stockImages.predyastiya.url,
-    imageAlt: stockImages.predyastiya.alt,
     items: [
       {
         id: "edamame",
@@ -128,8 +112,6 @@ export const restaurantMenu: MenuCategory[] = [
   {
     id: "dobavki",
     name: "Добавки",
-    imageUrl: stockImages.dobavki.url,
-    imageAlt: stockImages.dobavki.alt,
     items: [
       { id: "marinovano-yaytse", name: "Мариновано яйце", portion: "60г", priceEur: 1.5, priceBgn: 2.93 },
       { id: "sushi-oriz", name: "Суши ориз", portion: "150г", priceEur: 2.5, priceBgn: 4.89 },
@@ -142,8 +124,6 @@ export const restaurantMenu: MenuCategory[] = [
   {
     id: "poke",
     name: "Поке",
-    imageUrl: stockImages.poke.url,
-    imageAlt: stockImages.poke.alt,
     items: [
       {
         id: "glazirano-svinsko",
@@ -191,8 +171,6 @@ export const restaurantMenu: MenuCategory[] = [
   {
     id: "koreysko-barbekyu",
     name: "Корейско Барбекю",
-    imageUrl: stockImages["koreysko-barbekyu"].url,
-    imageAlt: stockImages["koreysko-barbekyu"].alt,
     note: "Задължителна резервация един ден по-рано.",
     items: [
       {
@@ -219,8 +197,6 @@ export const restaurantMenu: MenuCategory[] = [
       {
         id: "byalo",
         name: "Бяло вино",
-        imageUrl: stockImages["vina-byalo"].url,
-        imageAlt: stockImages["vina-byalo"].alt,
         items: [
           { id: "medi-valley-sauvignon-a-good-year", name: "MEDI VALLEY A Good Year, Sauvignon Blanc / Bulgaria", priceEur: 20, priceBgn: 39.11 },
           { id: "medi-valley-sauvignon-excentric", name: "MEDI VALLEY Excentric Incanto, Sauvignon Blanc / Bulgaria", priceEur: 22, priceBgn: 43.03 },
@@ -230,8 +206,6 @@ export const restaurantMenu: MenuCategory[] = [
       {
         id: "roze",
         name: "Вино розе",
-        imageUrl: stockImages["vina-roze"].url,
-        imageAlt: stockImages["vina-roze"].alt,
         items: [
           { id: "medi-valley-rose-a-good-year", name: "MEDI VALLEY A Good Year, Rose / Bulgaria", priceEur: 21, priceBgn: 41.07 },
           { id: "medi-valley-rose-excentric", name: "MEDI VALLEY Excentric Incanto, Rose / Bulgaria", priceEur: 22, priceBgn: 43.03 },
@@ -242,8 +216,6 @@ export const restaurantMenu: MenuCategory[] = [
       {
         id: "cherveno",
         name: "Червено вино",
-        imageUrl: stockImages["vina-cherveno"].url,
-        imageAlt: stockImages["vina-cherveno"].alt,
         items: [
           { id: "medi-valley-merlot-a-good-year", name: "MEDI VALLEY A Good Year, Merlot / Bulgaria", priceEur: 20, priceBgn: 39.11 },
           { id: "medi-valley-rubin-excentric", name: "MEDI VALLEY Excentric Incanto, Rubin / Bulgaria", priceEur: 22, priceBgn: 43.03 },
@@ -255,8 +227,6 @@ export const restaurantMenu: MenuCategory[] = [
   {
     id: "bezalkoholni",
     name: "Безалкохолни напитки",
-    imageUrl: stockImages.bezalkoholni.url,
-    imageAlt: stockImages.bezalkoholni.alt,
     items: [
       { id: "mineralna-voda-500", name: "Минерална вода", portion: "500мл", priceEur: 1.5, priceBgn: 2.93 },
       { id: "mineralna-voda-1500", name: "Минерална вода", portion: "1.5л", priceEur: 3, priceBgn: 5.87 },
@@ -270,8 +240,6 @@ export const restaurantMenu: MenuCategory[] = [
   {
     id: "organichni-chaiove",
     name: "Органични чайове",
-    imageUrl: stockImages["organichni-chaiove"].url,
-    imageAlt: stockImages["organichni-chaiove"].alt,
     items: [
       { id: "bancha", name: "Банча", portion: "300мл", priceEur: 4, priceBgn: 7.82 },
       { id: "gyokuro-tokiva", name: "Гиокуро Токива", portion: "300мл", priceEur: 5, priceBgn: 9.78 },
@@ -283,8 +251,6 @@ export const restaurantMenu: MenuCategory[] = [
   {
     id: "topli-napitki",
     name: "Топли напитки",
-    imageUrl: stockImages["topli-napitki"].url,
-    imageAlt: stockImages["topli-napitki"].alt,
     items: [
       { id: "espreso", name: "Еспресо", portion: "30мл", priceEur: 2, priceBgn: 3.91 },
       { id: "kapuchino", name: "Капучино", portion: "140мл", priceEur: 3, priceBgn: 5.87 },
@@ -298,8 +264,6 @@ export const restaurantMenu: MenuCategory[] = [
   {
     id: "bira",
     name: "Бира",
-    imageUrl: stockImages.bira.url,
-    imageAlt: stockImages.bira.alt,
     items: [
       { id: "nalivna-bira-330", name: "Наливна Бира", portion: "330мл", priceEur: 3.5, priceBgn: 6.84 },
       { id: "nalivna-bira-500", name: "Наливна Бира", portion: "500мл", priceEur: 4.5, priceBgn: 8.8 },
@@ -314,8 +278,6 @@ export const restaurantMenu: MenuCategory[] = [
   {
     id: "sake",
     name: "Саке",
-    imageUrl: stockImages.sake.url,
-    imageAlt: stockImages.sake.alt,
     items: [
       { id: "choya", name: "Чоя", portion: "80мл", priceEur: 4.5, priceBgn: 8.8 },
       { id: "samurai", name: "Самурай", portion: "80мл", priceEur: 6, priceBgn: 11.73 },

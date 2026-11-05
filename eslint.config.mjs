@@ -12,7 +12,20 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    "src/generated/**",
+    "playwright-report/**",
+    "test-results/**",
   ]),
+  {
+    // These two files only feed prisma/seed.ts; the site reads from the database.
+    files: ["src/app/**", "src/components/**", "src/lib/**"],
+    rules: {
+      "no-restricted-imports": [
+        "error",
+        { patterns: ["@/data/restaurantMenu", "@/data/cateringContent"] },
+      ],
+    },
+  },
 ]);
 
 export default eslintConfig;

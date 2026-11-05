@@ -1,78 +1,78 @@
-"use client";
-
-import { useState } from "react";
-import type { Allergen, MenuItem } from "@/data/types";
-import { allergenNames, formatPrice } from "@/lib/format";
+import type { MenuItem } from "@/data/types";
+import { formatPrice } from "@/lib/format";
 import { PhotoPlaceholder } from "@/components/PhotoPlaceholder";
-import { BowlIcon, InfoIcon, LeafIcon } from "@/components/icons";
+import { BowlIcon, LeafIcon } from "@/components/icons";
+
+// Two columns on phones, three from `lg`, inside the site's 1152px max-width container.
+const GRID_SIZES = "(min-width: 1152px) 368px, (min-width: 1024px) 33vw, 50vw";
+
+// The most cards a row can hold.
+const FIRST_ROW = 3;
+
+export function MenuItemGrid({
+  items,
+  onOpen,
+  isFirstOnPage = false,
+}: {
+  items: MenuItem[];
+  onOpen: (item: MenuItem) => void;
+  /** The first row's photos are then the page's largest paint, so they load eagerly. */
+  isFirstOnPage?: boolean;
+}) {
+  return (
+    <div className="grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-3">
+      {items.map((item, index) => (
+        <MenuItemCard key={item.id} item={item} onOpen={onOpen} eager={isFirstOnPage && index < FIRST_ROW} />
+      ))}
+    </div>
+  );
+}
 
 export function MenuItemCard({
   item,
-  legend,
-  fallbackImageUrl,
-  fallbackImageAlt,
+  onOpen,
+  eager = false,
 }: {
   item: MenuItem;
-  legend: Allergen[];
-  fallbackImageUrl?: string;
-  fallbackImageAlt?: string;
+  onOpen: (item: MenuItem) => void;
+  eager?: boolean;
 }) {
-  const [expanded, setExpanded] = useState(false);
-  const hasDetails = Boolean(item.description || (item.allergens && item.allergens.length > 0));
-  const names = allergenNames(item.allergens, legend);
-  const imageUrl = item.imageUrl ?? fallbackImageUrl;
-  const imageAlt = item.imageAlt ?? fallbackImageAlt ?? item.name;
-
   return (
-    <article className="flex gap-4 rounded-2xl border border-line bg-white p-4">
+    <article className="group relative flex flex-col overflow-hidden rounded-2xl border border-line bg-white transition-shadow focus-within:ring-2 focus-within:ring-pink-500 hover:shadow-md">
       <PhotoPlaceholder
-        className="h-20 w-20 shrink-0 rounded-xl"
-        icon={<BowlIcon className="h-8 w-8" />}
-        src={imageUrl}
-        alt={imageAlt}
+        className="aspect-[4/3] w-full"
+        icon={<BowlIcon className="h-12 w-12" />}
+        src={item.imageUrl}
+        alt={item.imageAlt ?? item.name}
+        sizes={GRID_SIZES}
+        eager={eager}
       />
-      <div className="min-w-0 flex-1">
-        <div className="flex items-start gap-1.5">
-          <h3 className="font-display text-base leading-snug text-ink-900">{item.name}</h3>
+      <div className="flex flex-1 flex-col p-3 sm:p-4">
+        <h3 className="font-display text-base leading-snug text-ink-900 sm:text-lg">
+          {/* The button's ::after covers the whole card, so a tap anywhere opens the panel. */}
+          <button
+            type="button"
+            onClick={() => onOpen(item)}
+            aria-haspopup="dialog"
+            className="text-left after:absolute after:inset-0 focus:outline-none group-hover:text-pink-700"
+          >
+            {item.name}
+          </button>
           {item.vegetarian && (
-            <LeafIcon className="mt-0.5 h-4 w-4 shrink-0 text-green-600" aria-label="Вегетарианско/веганско" />
-          )}
-        </div>
-        <div className="mt-1.5 flex items-center justify-between gap-3">
-          <span className="text-xs text-ink-500">{item.portion}</span>
-          <div className="flex shrink-0 items-center gap-2">
-            <span className="whitespace-nowrap text-sm font-semibold text-ink-900">
-              {formatPrice(item.priceEur, item.priceBgn)}
+            <span className="ml-1.5 inline-block align-[-2px]">
+              <LeafIcon className="h-4 w-4 text-green-700" />
+              <span className="sr-only">Вегетарианско</span>
             </span>
-            {hasDetails && (
-              <button
-                type="button"
-                onClick={() => setExpanded((v) => !v)}
-                aria-expanded={expanded}
-                aria-label="Допълнителна информация"
-                className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full border transition-colors ${
-                  expanded ? "border-pink-500 bg-pink-50 text-pink-600" : "border-line text-ink-500 hover:border-pink-400 hover:text-pink-600"
-                }`}
-              >
-                <InfoIcon className="h-4 w-4" />
-              </button>
-            )}
-          </div>
-        </div>
-
-        {expanded && hasDetails && (
-          <div className="mt-3 space-y-2 border-t border-line pt-3 text-sm">
-            {item.description && <p className="text-ink-700">{item.description}</p>}
-            {names.length > 0 && (
-              <p className="text-xs text-ink-500">
-                <span className="font-medium text-ink-700">Алергени: </span>
-                {names.join(", ")}
-              </p>
-            )}
-          </div>
+          )}
+        </h3>
+        {/* In the HTML on phones too, so search engines read every description. */}
+        {item.description && (
+          <p className="mt-1 hidden text-sm text-ink-700 sm:line-clamp-2">{item.description}</p>
         )}
-
-        {item.note && !expanded && <p className="mt-1 text-xs text-ink-500">{item.note}</p>}
+        <div className="mt-auto pt-2">
+          {item.portion && <p className="text-xs text-ink-700">{item.portion}</p>}
+          <p className="text-sm font-semibold text-ink-900">{formatPrice(item.priceEur, item.priceBgn)}</p>
+        </div>
       </div>
     </article>
   );

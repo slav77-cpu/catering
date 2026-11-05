@@ -1,14 +1,9 @@
 import type { ReactNode } from "react";
-import Image from "next/image";
+import { SiteImage } from "@/components/SiteImage";
 
 /**
- * Image slot for the site. Renders a real photo when `src` is given —
- * currently that's stock photography sourced as a stand-in so the site
- * has full visual coverage before the client's own photos arrive (brief
- * open question #2 / section 9). Swap `src` for a real photo URL/path
- * per item once available; no layout changes needed since callers just
- * pass a className controlling size/aspect ratio. Falls back to an
- * abstract gradient + icon placeholder when no `src` is set.
+ * Image slot for the site: a real photo when `src` is given, otherwise an
+ * abstract gradient and icon. Callers control size and aspect ratio via className.
  */
 export function PhotoPlaceholder({
   className = "",
@@ -16,23 +11,23 @@ export function PhotoPlaceholder({
   src,
   alt,
   // Must reflect the image's actual rendered size in this className/context —
-  // Next.js uses it to pick a srcset candidate. Getting this wrong (e.g. the
-  // old blanket "50vw" default) makes small thumbnails fetch multi-megabyte
-  // images sized for a hero banner, which visibly delays below-the-fold
-  // content. Default assumes a small fixed-size thumbnail; hero/banner
-  // callers should pass a wider value explicitly.
-  sizes = "96px",
+  // Next.js uses it to pick a srcset candidate. Getting this wrong makes small
+  // slots fetch images sized for a hero banner. There is no default on purpose.
+  sizes,
+  eager = false,
 }: {
   className?: string;
   icon: ReactNode;
   src?: string;
-  alt?: string;
-  sizes?: string;
+  alt: string;
+  sizes: string;
+  /** For photos on the first screen: lazy loading would delay them until layout. */
+  eager?: boolean;
 }) {
   if (src) {
     return (
       <div className={`relative overflow-hidden ${className}`}>
-        <Image src={src} alt={alt ?? ""} fill sizes={sizes} className="object-cover" />
+        <SiteImage src={src} alt={alt} fill sizes={sizes} loading={eager ? "eager" : "lazy"} className="object-cover" />
       </div>
     );
   }
