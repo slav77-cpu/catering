@@ -1,7 +1,7 @@
 // Admin accounts are only ever created here; the site has no sign-up.
 //
-//   npm run admin:create -- owner@example.com          create, prompting for a password
-//   npm run admin:create -- owner@example.com --reset  change an existing account's password
+//   npm run admin:create -- ivan          create, prompting for a password
+//   npm run admin:create -- ivan --reset  change an existing account's password
 //
 // ADMIN_PASSWORD is read instead of prompting when set (used by the CI pipeline).
 
@@ -13,7 +13,7 @@ import { PrismaClient } from "../src/generated/prisma/client";
 
 loadEnvConfig(process.cwd());
 
-const MIN_PASSWORD_LENGTH = 12;
+const MIN_PASSWORD_LENGTH = 8;
 const BCRYPT_COST = 12;
 
 function readHiddenLine(prompt: string): Promise<string> {
@@ -61,10 +61,11 @@ async function readPassword(): Promise<string> {
 async function main() {
   const args = process.argv.slice(2);
   const reset = args.includes("--reset");
-  const email = args.find((arg) => !arg.startsWith("--"))?.trim().toLowerCase();
+  // Lowercased here and at login, so "Ivan" and "ivan" are the same account.
+  const username = args.find((arg) => !arg.startsWith("--"))?.trim().toLowerCase();
 
-  if (!email || !email.includes("@")) {
-    throw new Error("Usage: npm run admin:create -- owner@example.com [--reset]");
+  if (!username || !/^\S{3,40}$/.test(username)) {
+    throw new Error("Usage: npm run admin:create -- username [--reset] (3 to 40 characters, no spaces)");
   }
   if (!process.env.DATABASE_URL) {
     throw new Error("DATABASE_URL is not set.");
@@ -75,12 +76,12 @@ async function main() {
   });
 
   try {
-    const existing = await db.adminUser.findUnique({ where: { email } });
+    const existing = await db.adminUser.findUnique({ where: { username } });
     if (existing && !reset) {
-      throw new Error(`${email} already exists. Pass --reset to change its password.`);
+      throw new Error(`${username} already exists. Pass --reset to change its password.`);
     }
     if (!existing && reset) {
-      throw new Error(`${email} does not exist, so there is nothing to reset.`);
+      throw new Error(`${username} does not exist, so there is nothing to reset.`);
     }
 
     const password = await readPassword();
@@ -90,11 +91,11 @@ async function main() {
     const passwordHash = await bcrypt.hash(password, BCRYPT_COST);
 
     await db.adminUser.upsert({
-      where: { email },
-      create: { email, passwordHash },
+      where: { username },
+      create: { username, passwordHash },
       update: { passwordHash },
     });
-    console.log(reset ? `Password changed for ${email}.` : `Created admin ${email}.`);
+    console.log(reset ? `Password changed for ${username}.` : `Created admin ${username}.`);
   } finally {
     await db.$disconnect();
   }

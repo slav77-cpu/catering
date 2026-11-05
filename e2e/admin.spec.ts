@@ -1,6 +1,6 @@
 import { expect, test, type Locator, type Page } from "@playwright/test";
 
-const email = process.env.E2E_ADMIN_EMAIL ?? "admin@example.com";
+const username = process.env.E2E_ADMIN_USERNAME ?? "admin";
 const password = process.env.E2E_ADMIN_PASSWORD ?? "e2e-only-password-123";
 
 // 1x1 PNG, used for both the "file" being uploaded and the images Cloudinary would serve.
@@ -16,7 +16,7 @@ function alertIn(scope: Page | Locator) {
 
 async function logIn(page: Page, target = "/admin") {
   await page.goto(`/login?callbackUrl=${encodeURIComponent(target)}`);
-  await page.getByLabel("Имейл").fill(email);
+  await page.getByLabel("Потребителско име").fill(username);
   await page.getByLabel("Парола").fill(password);
   await page.getByRole("button", { name: "Вход" }).click();
   await page.waitForURL(`**${target}`);
@@ -61,7 +61,7 @@ test.describe("access control", () => {
   });
 
   test("a wrong password is refused, and the sixth attempt is rate limited", async ({ browser, baseURL }, testInfo) => {
-    // Its own client IP and address, so this doesn't lock out the other tests.
+    // Its own client IP and username, so this doesn't lock out the other tests.
     const context = await browser.newContext({
       baseURL,
       extraHTTPHeaders: { "x-forwarded-for": `198.51.100.${testInfo.project.name === "phone" ? 2 : 1}` },
@@ -70,10 +70,10 @@ test.describe("access control", () => {
     await page.goto("/login");
 
     for (let attempt = 1; attempt <= 5; attempt++) {
-      await page.getByLabel("Имейл").fill(`nobody-${testInfo.project.name}@example.com`);
+      await page.getByLabel("Потребителско име").fill(`nobody-${testInfo.project.name}`);
       await page.getByLabel("Парола").fill("wrong-password");
       await page.getByRole("button", { name: "Вход" }).click();
-      await expect(alertIn(page)).toContainText("Грешен имейл или парола");
+      await expect(alertIn(page)).toContainText("Грешно потребителско име или парола");
       await expect(page.getByRole("button", { name: "Вход" })).toBeEnabled();
     }
 

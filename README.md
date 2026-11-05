@@ -26,7 +26,7 @@ npm install
 cp .env.example .env.local     # попълнете стойностите
 npx prisma migrate deploy      # създава таблиците
 npm run db:seed                # прехвърля менюто от src/data в базата
-npm run admin:create -- вие@example.com
+npm run admin:create -- потребителско-име
 npm run dev
 ```
 
@@ -36,9 +36,9 @@ npm run dev
 |---|---|
 | `npm run db:migrate` | Нова миграция след промяна на `prisma/schema.prisma` |
 | `npm run db:seed` | Зарежда началното меню. Не прави нищо, ако в базата вече има категории |
-| `npm run admin:create -- имейл` | Нов администратор (пита за парола, поне 12 знака) |
-| `npm run admin:create -- имейл --reset` | Смяна на парола |
-| `npm run test:e2e` | Браузърните тестове (нужна е направена `npm run build`, база с seed и админ; `E2E_ADMIN_EMAIL` и `E2E_ADMIN_PASSWORD` задават акаунта) |
+| `npm run admin:create -- потребител` | Нов администратор (пита за парола, поне 8 знака) |
+| `npm run admin:create -- потребител --reset` | Смяна на парола |
+| `npm run test:e2e` | Браузърните тестове (нужна е направена `npm run build`, база с seed и админ; `E2E_ADMIN_USERNAME` и `E2E_ADMIN_PASSWORD` задават акаунта) |
 
 ## Къде живее съдържанието
 
@@ -92,10 +92,10 @@ Settings → Secrets and variables → Actions → **New repository secret**:
 Еднократно, от локална машина, с **External** адреса на базата (стойността не се записва никъде):
 
 ```bash
-export DATABASE_URL='<External Database URL>'
+export DATABASE_URL='<External Database URL>?sslmode=require'
 npx prisma migrate deploy
 npm run db:seed
-npm run admin:create -- имейл-на-клиента
+npm run admin:create -- потребител-на-клиента
 unset DATABASE_URL
 ```
 

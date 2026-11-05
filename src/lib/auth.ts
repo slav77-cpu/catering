@@ -9,8 +9,8 @@ import { allowLoginAttempt, resetLoginAttempts } from "@/lib/rateLimit";
 
 export const RATE_LIMITED_ERROR = "RATE_LIMITED";
 
-// Compared against when the email is unknown, so the response time doesn't
-// reveal which addresses have an account. A real bcrypt hash at the same cost
+// Compared against when the username is unknown, so the response time doesn't
+// reveal which usernames have an account. A real bcrypt hash at the same cost
 // as scripts/create-admin.ts, of a random string nobody holds.
 const DUMMY_PASSWORD_HASH = "$2b$12$s1o3QRjaZhnvq9SbBqFZV.yficuDoP5SXUs7OnveSKRkxWTiRVhre";
 
@@ -28,25 +28,25 @@ export const authOptions: NextAuthOptions = {
     CredentialsProvider({
       name: "credentials",
       credentials: {
-        email: { label: "Имейл", type: "email" },
+        username: { label: "Потребителско име", type: "text" },
         password: { label: "Парола", type: "password" },
       },
       async authorize(credentials, request) {
-        const email = credentials?.email?.trim().toLowerCase();
+        const username = credentials?.username?.trim().toLowerCase();
         const password = credentials?.password;
-        if (!email || !password) return null;
+        if (!username || !password) return null;
 
         const ip = clientIp(request?.headers);
-        if (!(await allowLoginAttempt(ip, email))) {
+        if (!(await allowLoginAttempt(ip, username))) {
           throw new Error(RATE_LIMITED_ERROR);
         }
 
-        const user = await db.adminUser.findUnique({ where: { email } });
+        const user = await db.adminUser.findUnique({ where: { username } });
         const valid = await bcrypt.compare(password, user?.passwordHash ?? DUMMY_PASSWORD_HASH);
         if (!user || !valid) return null;
 
-        await resetLoginAttempts(ip, email);
-        return { id: user.id, email: user.email };
+        await resetLoginAttempts(ip, username);
+        return { id: user.id, name: user.username };
       },
     }),
   ],
@@ -66,7 +66,7 @@ export const getAdmin = cache(async () => {
   const session = await getServerSession(authOptions);
   const id = session?.user?.id;
   if (!id) return null;
-  return db.adminUser.findUnique({ where: { id }, select: { id: true, email: true } });
+  return db.adminUser.findUnique({ where: { id }, select: { id: true, username: true } });
 });
 
 /** For admin pages and their data reads: sends anyone not signed in to the login page. */

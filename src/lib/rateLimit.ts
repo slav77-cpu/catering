@@ -4,11 +4,11 @@ import { db } from "@/lib/db";
 const WINDOW_MINUTES = 15;
 
 // Per client IP, as the brief asks. X-Forwarded-For can be forged, so the
-// per-email cap is what bounds a distributed or spoofed attack. It is higher
-// because anyone who knows the address can spend it, which would lock the real
+// per-username cap is what bounds a distributed or spoofed attack. It is higher
+// because anyone who knows the username can spend it, which would lock the real
 // admin out for the rest of the window.
 const MAX_ATTEMPTS_PER_IP = 5;
-const MAX_ATTEMPTS_PER_EMAIL = 20;
+const MAX_ATTEMPTS_PER_USERNAME = 20;
 
 /**
  * Atomically counts one attempt and returns the new total. Counting before the
@@ -36,22 +36,22 @@ function ipKey(ip: string) {
   return `ip:${ip}`;
 }
 
-function emailKey(email: string) {
-  return `email:${email}`;
+function usernameKey(username: string) {
+  return `user:${username}`;
 }
 
-/** Records the attempt; returns false when this IP or email is over its limit. */
-export async function allowLoginAttempt(ip: string, email: string): Promise<boolean> {
-  const [byIp, byEmail] = await Promise.all([consumeAttempt(ipKey(ip)), consumeAttempt(emailKey(email))]);
-  return byIp <= MAX_ATTEMPTS_PER_IP && byEmail <= MAX_ATTEMPTS_PER_EMAIL;
+/** Records the attempt; returns false when this IP or username is over its limit. */
+export async function allowLoginAttempt(ip: string, username: string): Promise<boolean> {
+  const [byIp, byUsername] = await Promise.all([consumeAttempt(ipKey(ip)), consumeAttempt(usernameKey(username))]);
+  return byIp <= MAX_ATTEMPTS_PER_IP && byUsername <= MAX_ATTEMPTS_PER_USERNAME;
 }
 
 /** Clears the counters after a successful login and drops expired rows. */
-export async function resetLoginAttempts(ip: string, email: string): Promise<void> {
+export async function resetLoginAttempts(ip: string, username: string): Promise<void> {
   await db.loginAttempt.deleteMany({
     where: {
       OR: [
-        { key: { in: [ipKey(ip), emailKey(email)] } },
+        { key: { in: [ipKey(ip), usernameKey(username)] } },
         { windowStart: { lt: new Date(Date.now() - 24 * 60 * 60 * 1000) } },
       ],
     },

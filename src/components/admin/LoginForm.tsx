@@ -17,7 +17,7 @@ export function LoginForm({ callbackUrl }: { callbackUrl: string }) {
     try {
       const result = await signIn("credentials", {
         redirect: false,
-        email: form.get("email"),
+        username: form.get("username"),
         password: form.get("password"),
       });
       if (result?.ok && !result.error) {
@@ -27,7 +27,7 @@ export function LoginForm({ callbackUrl }: { callbackUrl: string }) {
       setError(
         result?.error === "RATE_LIMITED"
           ? "Твърде много опити за вход. Опитайте отново след 15 минути."
-          : "Грешен имейл или парола.",
+          : "Грешно потребителско име или парола.",
       );
     } catch {
       setError("Няма връзка със сървъра. Проверете интернета и опитайте отново.");
@@ -37,8 +37,18 @@ export function LoginForm({ callbackUrl }: { callbackUrl: string }) {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      <Field label="Имейл" htmlFor="email">
-        <input id="email" name="email" type="email" required autoComplete="username" className={inputClass} />
+      <Field label="Потребителско име" htmlFor="username">
+        <input
+          id="username"
+          name="username"
+          type="text"
+          required
+          autoComplete="username"
+          autoCapitalize="none"
+          autoCorrect="off"
+          spellCheck={false}
+          className={inputClass}
+        />
       </Field>
       <Field label="Парола" htmlFor="password">
         <input

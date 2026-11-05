@@ -55,7 +55,7 @@ jobs:
       CLOUDINARY_API_KEY: ci-only-api-key
       CLOUDINARY_API_SECRET: ci-only-api-secret
       CLOUDINARY_UPLOAD_PRESET: ci-preset
-      E2E_ADMIN_EMAIL: admin@example.com
+      E2E_ADMIN_USERNAME: admin
       E2E_ADMIN_PASSWORD: ci-only-admin-password
     steps:
       - uses: actions/checkout@v7
@@ -68,7 +68,7 @@ jobs:
       - run: npm run build
       - run: npx prisma migrate deploy
       - run: npm run db:seed
-      - run: npm run admin:create -- "$E2E_ADMIN_EMAIL"
+      - run: npm run admin:create -- "$E2E_ADMIN_USERNAME"
         env:
           ADMIN_PASSWORD: ci-only-admin-password
       - run: npx playwright test
