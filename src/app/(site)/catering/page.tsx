@@ -5,7 +5,6 @@ import { SectionHeading } from "@/components/SectionHeading";
 import { SiteImage } from "@/components/SiteImage";
 import { CateringMenu } from "@/components/catering/CateringMenu";
 import { EventGallery } from "@/components/catering/EventGallery";
-import { InquiryForm } from "@/components/catering/InquiryForm";
 import { site } from "@/data/site";
 import { getPublicGallery, getPublicMenu } from "@/lib/menu";
 import { pageMetadata } from "@/lib/seo";
@@ -23,7 +22,7 @@ import {
 
 export const metadata: Metadata = pageMetadata({
   title: "Кетъринг",
-  description: `${site.cateringName} — японски вдъхновен кетъринг за частни и фирмени събития в ${site.city}. Изпратете запитване за оферта, съобразена с вашето събитие.`,
+  description: `${site.cateringName} — японски вдъхновен кетъринг за частни и фирмени събития в ${site.city}. Обадете ни се за оферта, съобразена с вашето събитие.`,
   path: "/catering",
 });
 
@@ -147,7 +146,7 @@ export default async function CateringPage() {
             subtitle="Всяка оферта се изготвя индивидуално според броя гости, мястото и повода — пакетите по-долу са отправна точка за разговор, не фиксирани цени."
           />
           <div className="mt-3 text-sm text-white/70">
-            Точната цена и минимален брой гости се уточняват по запитване, съобразени изцяло с вашето
+            Точната цена и минимален брой гости се уточняват по телефона, съобразени изцяло с вашето
             събитие.
           </div>
           <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -174,8 +173,9 @@ export default async function CateringPage() {
             ))}
           </div>
           <div className="mt-8">
-            <Button href="#zapitvane" variant="primary">
-              Изпрати запитване
+            <Button href={telHref} variant="primary">
+              <PhoneIcon className="h-4 w-4" />
+              Обади се за оферта
             </Button>
           </div>
         </div>
@@ -201,14 +201,10 @@ export default async function CateringPage() {
             Не откривате точно това, което търсите? Кажете ни за вашето събитие и ще предложим ястия,
             съобразени с повода.
           </p>
-          <div className="flex shrink-0 flex-wrap gap-3">
-            <Button href="#zapitvane" variant="primary">
-              Към формата
-            </Button>
-            <Button href={telHref} variant="secondary">
-              Обади се
-            </Button>
-          </div>
+          <Button href={telHref} variant="primary" className="shrink-0">
+            <PhoneIcon className="h-4 w-4" />
+            Обади се
+          </Button>
         </div>
       </section>
 
@@ -232,24 +228,15 @@ export default async function CateringPage() {
         </div>
       </section>
 
-      {/* 5. Форма за запитване/оферта */}
-      <section id="zapitvane" className="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8">
-        <SectionHeading
-          kicker="Запитване"
-          title="Заявете оферта за вашето събитие"
-          subtitle="Попълнете формата с детайли за събитието и ще се свържем с вас, за да изготвим индивидуална оферта."
-        />
-        <div className="mt-10 grid gap-8 lg:grid-cols-3">
-          <div className="lg:col-span-2">
-            <InquiryForm />
-          </div>
-          <aside className="flex flex-col justify-between gap-4 rounded-3xl border border-line bg-white p-7">
-            <div>
-              <p className="font-display text-xl text-ink-900">Предпочитате директно обаждане?</p>
-              <p className="mt-2 text-sm text-ink-700">
-                Обадете ни се директно — с удоволствие ще обсъдим детайлите на вашето събитие по телефона.
-              </p>
-            </div>
+      {/* 5. Обаждане за оферта */}
+      <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8">
+        <div className="flex flex-col items-start gap-8 rounded-3xl border border-line bg-white p-7 sm:p-10 md:flex-row md:items-center md:justify-between">
+          <SectionHeading
+            kicker="Оферта"
+            title="Обадете ни се за оферта"
+            subtitle="Разкажете ни за вашето събитие и ще изготвим индивидуална оферта според броя гости, мястото и повода."
+          />
+          <div className="flex shrink-0 flex-col items-start gap-4">
             <a
               href={telHref}
               className="inline-flex items-center justify-center gap-2 rounded-full bg-pink-600 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-pink-700"
@@ -266,7 +253,7 @@ export default async function CateringPage() {
               <InstagramIcon className="h-4 w-4" />
               {site.instagramHandle}
             </a>
-          </aside>
+          </div>
         </div>
       </section>
     </div>

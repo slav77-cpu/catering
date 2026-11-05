@@ -85,19 +85,15 @@ test.describe("public site", () => {
     expect(html).toContain('"@type":"MenuItem"');
   });
 
-  test("the catering inquiry form reports success for valid data", async ({ page }) => {
-    await page.goto("/catering#zapitvane");
-    await page.getByLabel("Име", { exact: true }).fill("Тест Тестов");
-    await page.getByLabel("Телефон").fill("0888123456");
-    await page.getByLabel("Имейл").fill("test@example.com");
-    await page.getByLabel("Дата на събитието").fill("2030-06-15");
-    await page.getByLabel("Брой гости").fill("40");
-    await page.getByLabel("Тип събитие").selectOption("firmeno");
-
-    const response = page.waitForResponse("**/api/catering-inquiry");
-    await page.getByRole("button", { name: "Изпрати запитване" }).click();
-    expect((await response).status()).toBe(200);
-    await expect(page.getByText("Благодарим!")).toBeVisible();
+  test("visitors reach us by phone: there are no forms and no form endpoints", async ({ page, request }) => {
+    for (const path of ["/catering", "/contacts"]) {
+      await page.goto(path);
+      await expect(page.locator("main form")).toHaveCount(0);
+      await expect(page.locator('main a[href^="tel:"]').first()).toBeVisible();
+    }
+    for (const endpoint of ["/api/contact", "/api/catering-inquiry"]) {
+      expect((await request.post(endpoint, { data: {} })).status()).toBe(404);
+    }
   });
 
   test("an unknown address gets the 404 page", async ({ page }) => {

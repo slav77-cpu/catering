@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ContactForm } from "@/components/contacts/ContactForm";
 import { site } from "@/data/site";
 import { pageMetadata } from "@/lib/seo";
 import { ClockIcon, FacebookIcon, InstagramIcon, MapPinIcon, PhoneIcon } from "@/components/icons";
@@ -31,14 +30,13 @@ export default function ContactsPage() {
           <p className="text-xs font-semibold uppercase tracking-[0.25em] text-pink-600">Контакти</p>
           <h1 className="mt-1 font-display text-3xl text-ink-900 sm:text-4xl">Контакти</h1>
           <p className="mt-2 max-w-xl text-sm text-ink-700">
-            Ще се радваме да чуем от вас — по телефон, имейл или с кратко съобщение по-долу.
+            Ще се радваме да чуем от вас — обадете ни се.
           </p>
         </div>
       </div>
 
-      <div className="mx-auto mt-8 grid max-w-6xl gap-8 px-4 sm:px-6 lg:mt-10 lg:grid-cols-2 lg:gap-10 lg:px-8">
-        {/* Map + info */}
-        <div className="space-y-6">
+      <div className="mx-auto mt-8 grid max-w-6xl gap-8 px-4 sm:px-6 lg:mt-10 lg:grid-cols-2 lg:items-start lg:gap-10 lg:px-8">
+        <div>
           <div className="overflow-hidden rounded-2xl border border-line sm:rounded-3xl">
             {/*
               Text-search embed — no API key required. Swap for an exact
@@ -55,7 +53,9 @@ export default function ContactsPage() {
               title="Локация на картата"
             />
           </div>
+        </div>
 
+        <div>
           <div className="rounded-2xl border border-line bg-white p-6 sm:rounded-3xl sm:p-8">
             <div className="flex items-start gap-3">
               <MapPinIcon className="h-5 w-5 shrink-0 text-pink-500" />
@@ -121,19 +121,6 @@ export default function ContactsPage() {
                   <FacebookIcon className="h-5 w-5" />
                 </a>
               )}
-            </div>
-          </div>
-        </div>
-
-        {/* Contact form */}
-        <div>
-          <div className="rounded-2xl border border-line bg-white p-6 sm:rounded-3xl sm:p-8">
-            <h2 className="font-display text-2xl text-ink-900">Изпратете ни съобщение</h2>
-            <p className="mt-2 text-sm text-ink-700">
-              Попълнете формата и ще се свържем с вас възможно най-скоро.
-            </p>
-            <div className="mt-6">
-              <ContactForm />
             </div>
           </div>
         </div>
